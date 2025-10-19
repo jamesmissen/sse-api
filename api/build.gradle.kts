@@ -21,6 +21,8 @@ dependencies {
     implementation(libs.spring.boot.reactor)
     implementation(libs.spring.boot.reactor.netty)
     implementation(libs.spring.boot.webflux)
+    implementation(libs.springdoc.webflux.api)
+    implementation(libs.springdoc.webflux.ui)
     implementation(libs.yaml.snakeyaml)
 
     developmentOnly(libs.spring.boot.devtools)

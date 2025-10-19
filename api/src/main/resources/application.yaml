@@ -6,5 +6,16 @@ server:
     enabled: true
 
 spring:
+  web:
+    resources:
+      add-mappings: false
   webflux:
     base-path: ${APP_BASE_PATH:/}
+
+springdoc:
+  api-docs:
+    enabled: ${APP_API_DOCS_ENABLED:true}
+    path: ${APP_API_DOCS_PATH:/openapi.json}
+  swagger-ui:
+    enabled: ${APP_SWAGGER_UI_ENABLED:true}
+    path: ${APP_SWAGGER_UI_PATH:/docs}
