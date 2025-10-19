@@ -2,11 +2,12 @@
 jackson = "3.0.0"
 kotlin = "2.2.20"
 kotlinXCoroutines = "1.10.2"
-springBoot = "4.0.0-M3"
 qosLogback = "1.5.19"
 qosSlf4j = "2.0.17"
 reactorKotlin = "1.2.4"
 snakeYaml = "2.5"
+springBoot = "4.0.0-M3"
+springDoc = "3.0.0-M1"
 
 [libraries]
 jackson-module = { group = "tools.jackson.module", name = "jackson-module-kotlin", version.ref = "jackson" }
@@ -22,6 +23,8 @@ spring-boot-reactor = { group = "org.springframework.boot", name = "spring-boot-
 spring-boot-reactor-netty = { group = "org.springframework.boot", name = "spring-boot-reactor-netty", version.ref = "springBoot" }
 spring-boot-webflux = { group = "org.springframework.boot", name = "spring-boot-webflux", version.ref = "springBoot" }
 spring-boot-devtools = { group = "org.springframework.boot", name = "spring-boot-devtools", version.ref = "springBoot" }
+springdoc-webflux-api = { group = "org.springdoc", name = "springdoc-openapi-starter-webflux-api", version.ref = "springDoc" }
+springdoc-webflux-ui = { group = "org.springdoc", name = "springdoc-openapi-starter-webflux-ui", version.ref = "springDoc" }
 yaml-snakeyaml = { group = "org.yaml", name = "snakeyaml", version.ref = "snakeYaml" }
 
 [plugins]
