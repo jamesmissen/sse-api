@@ -9,6 +9,7 @@ kotlin {
 }
 
 dependencies {
+    implementation(libs.jackson.module)
     implementation(libs.kotlin.reflect)
     implementation(libs.kotlinx.coroutines.core)
     implementation(libs.kotlinx.coroutines.reactor)
@@ -16,6 +17,7 @@ dependencies {
     implementation(libs.qos.slf4j.bridge)
     implementation(libs.reactor.kotlin)
     implementation(libs.spring.boot.autoconfigure)
+    implementation(libs.spring.boot.jackson)
     implementation(libs.spring.boot.reactor)
     implementation(libs.spring.boot.reactor.netty)
     implementation(libs.spring.boot.webflux)
