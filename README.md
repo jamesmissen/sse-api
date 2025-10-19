@@ -13,6 +13,20 @@ documentation.
 - **OpenAPI documentation** – auto-generated using SpringDoc
 - **Swagger UI** – interactive API docs with data schemas
 
+## 📘 OpenAPI Documentation
+
+The OpenAPI documentation generated for this application is fully compatible with **version 3.2** of OpenAPI
+Specification (released in [September 2025](https://github.com/OAI/OpenAPI-Specification/releases/tag/3.2.0)).
+
+This version of the specification adds support for the
+[`text/event-stream`](https://html.spec.whatwg.org/multipage/iana.html#text/event-stream) media type (used for SSE) and
+other sequential media types. In particular, it uses a new
+[`itemSchema`](https://spec.openapis.org/oas/v3.2.0.html#fixed-fields-11) field to model the schema of each event's
+[`data`](https://developer.mozilla.org/en-US/docs/Web/API/Server-sent_events/Using_server-sent_events#data) field.
+
+_**Note:** Although the docs are compatible with version 3.2 of the specification, the JSON doc still lists the version
+as 3.1. This is for compatability purposes with other software, such as Swagger UI._
+
 ## 🏗️ Build and Run
 
 #### Option 1: Using Gradle
