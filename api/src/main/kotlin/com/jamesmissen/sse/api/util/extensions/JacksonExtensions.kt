@@ -6,11 +6,11 @@ import tools.jackson.databind.ObjectMapper
 import tools.jackson.module.kotlin.readValue
 
 /**
- * Deserializes JSON content from a resource.
+ * Deserializes content from a resource.
  *
  * @receiver The [ObjectMapper] to read the resource with.
  *
- * @param src The JSON-deserializable resource.
+ * @param src The deserializable resource.
  *
  * @return An object of type [T].
  *
