@@ -4,6 +4,8 @@ import com.jamesmissen.sse.api.model.Country
 import com.jamesmissen.sse.api.util.Constants.DATA_RESOURCE_LOCATION
 import com.jamesmissen.sse.api.util.extensions.readValue
 import org.springframework.core.io.ResourceLoader
+import org.springframework.http.MediaType.APPLICATION_JSON_VALUE
+import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
 import tools.jackson.databind.json.JsonMapper
@@ -28,4 +30,16 @@ class CountriesController(private final val jsonMapper: JsonMapper, private fina
     private final val countryData: List<Country> by lazy {
         jsonMapper.readValue(resources.getResource("$DATA_RESOURCE_LOCATION/countries.json"))
     }
+
+    /**
+     * Gets all country data.
+     *
+     * This endpoint produces a JSON array of all [Country] items.
+     *
+     * @return A [List] of [Country] items.
+     *
+     * @author James Missen
+     */
+    @GetMapping("", produces = [APPLICATION_JSON_VALUE])
+    final fun getCountries() = countryData
 }
