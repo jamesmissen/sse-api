@@ -1,0 +1,27 @@
+[versions]
+kotlin = "2.2.20"
+kotlinXCoroutines = "1.10.2"
+springBoot = "4.0.0-M3"
+qosLogback = "1.5.19"
+qosSlf4j = "2.0.17"
+reactorKotlin = "1.2.4"
+snakeYaml = "2.5"
+
+[libraries]
+kotlin-reflect = { group = "org.jetbrains.kotlin", name = "kotlin-reflect", version.ref = "kotlin" }
+kotlinx-coroutines-core = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-core", version.ref = "kotlinXCoroutines" }
+kotlinx-coroutines-reactor = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-reactor", version.ref = "kotlinXCoroutines" }
+qos-logback-classic = { group = "ch.qos.logback", name = "logback-classic", version.ref = "qosLogback" }
+qos-slf4j-bridge = { group = "org.slf4j", name = "jul-to-slf4j", version.ref = "qosSlf4j" }
+reactor-kotlin = { group = "io.projectreactor.kotlin", name = "reactor-kotlin-extensions", version.ref = "reactorKotlin" }
+spring-boot-autoconfigure = { group = "org.springframework.boot", name = "spring-boot-autoconfigure", version.ref = "springBoot" }
+spring-boot-reactor = { group = "org.springframework.boot", name = "spring-boot-reactor", version.ref = "springBoot" }
+spring-boot-reactor-netty = { group = "org.springframework.boot", name = "spring-boot-reactor-netty", version.ref = "springBoot" }
+spring-boot-webflux = { group = "org.springframework.boot", name = "spring-boot-webflux", version.ref = "springBoot" }
+spring-boot-devtools = { group = "org.springframework.boot", name = "spring-boot-devtools", version.ref = "springBoot" }
+yaml-snakeyaml = { group = "org.yaml", name = "snakeyaml", version.ref = "snakeYaml" }
+
+[plugins]
+kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
+kotlin-spring = { id = "org.jetbrains.kotlin.plugin.spring", version.ref = "kotlin" }
+spring-boot = { id = "org.springframework.boot", version.ref = "springBoot" }

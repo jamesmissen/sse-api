@@ -1,0 +1,10 @@
+server:
+  error:
+    whitelabel:
+      enabled: false
+  http2:
+    enabled: true
+
+spring:
+  webflux:
+    base-path: ${APP_BASE_PATH:/}
