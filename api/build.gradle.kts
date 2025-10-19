@@ -9,7 +9,8 @@ kotlin {
 }
 
 dependencies {
-    implementation(libs.jackson.module)
+    implementation(libs.jackson2.module)
+    implementation(libs.jackson3.module)
     implementation(libs.kotlin.reflect)
     implementation(libs.kotlinx.coroutines.core)
     implementation(libs.kotlinx.coroutines.reactor)
