@@ -15,10 +15,17 @@ import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
 import tools.jackson.databind.json.JsonMapper
 import java.lang.System.currentTimeMillis
+import java.time.Duration.ofMillis
+import java.time.Instant.ofEpochMilli
+import java.time.format.DateTimeFormatter
+import kotlin.io.encoding.Base64
+import kotlin.text.Charsets.UTF_8
 
 /**
  * A REST controller for country resources.
  *
+ * @property base64 The Base64 encoder and decoder.
+ * @property dateTimeFormatter The formatter for date-times.
  * @property jsonMapper The JSON object mapper.
  * @property resources The resource loader.
  *
@@ -26,7 +33,12 @@ import java.lang.System.currentTimeMillis
  */
 @RestController
 @RequestMapping("/countries")
-class CountriesController(private final val jsonMapper: JsonMapper, private final val resources: ResourceLoader) {
+class CountriesController(
+    private final val base64: Base64,
+    private final val dateTimeFormatter: DateTimeFormatter,
+    private final val jsonMapper: JsonMapper,
+    private final val resources: ResourceLoader
+) {
 
     companion object {
 
@@ -36,6 +48,20 @@ class CountriesController(private final val jsonMapper: JsonMapper, private fina
          * @author James Missen
          */
         private const val DELAY = 4000L // milliseconds
+
+        /**
+         * A constant for the name used as the Server-Sent Event `event` field value.
+         *
+         * @author James Missen
+         */
+        private const val EVENT = "country"
+
+        /**
+         * A constant for the reconnection time (in milliseconds) used as the Server-Sent Event `retry` field value.
+         *
+         * @author James Missen
+         */
+        private const val RETRY = 10000L // milliseconds
     }
 
     /**
@@ -62,7 +88,7 @@ class CountriesController(private final val jsonMapper: JsonMapper, private fina
     /**
      * Streams country data as a continuous flow of Server-Sent Events.
      *
-     * This endpoint produces an event stream, with each event including a [Country] `data` payload.
+     * This endpoint produces an event stream, with each event including a [Country] `data` payload and a [String] `id`.
      *
      * @return A [Flow] of [ServerSentEvent]s, each with a [Country] `data` payload.
      *
@@ -79,10 +105,15 @@ class CountriesController(private final val jsonMapper: JsonMapper, private fina
             delay(DELAY * id - currentTimeMillis())
 
             val country = countryData[(id % countryData.size).toInt()]
+            val timestamp = ofEpochMilli(DELAY * id)
 
             // Construct event
             val event = ServerSentEvent.builder<Country>()
                 .data(country)
+                .id(base64.encode("$EVENT-$id".toByteArray(UTF_8)))
+                .event(EVENT)
+                .retry(ofMillis(RETRY))
+                .comment(dateTimeFormatter.format(timestamp))
                 .build()
 
             emit(event)
