@@ -521,14 +521,6 @@ class SpringDocConfiguration {
         springDocCustomizers
     ) {
 
-        override fun openapiJson(
-            serverHttpRequest: ServerHttpRequest?,
-            apiDocsUrl: String?,
-            locale: Locale?
-        ): Mono<ByteArray?>? {
-            return super.openapiJson(serverHttpRequest, apiDocsUrl, locale)
-        }
-
         /**
          * Disables the YAML OpenAPI docs endpoint.
          *
