@@ -1,5 +1,8 @@
 package com.jamesmissen.sse.api
 
+import com.jamesmissen.sse.api.util.Constants.APPLICATION_NAME
+import io.swagger.v3.oas.annotations.OpenAPIDefinition
+import io.swagger.v3.oas.annotations.info.Info
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.runApplication
 
@@ -8,11 +11,15 @@ import org.springframework.boot.runApplication
  *
  * This class bootstraps the service using Spring Boot's autoconfiguration and component scanning features.
  *
+ * The `@`[OpenAPIDefinition] annotation provides top-level metadata for the generated OpenAPI docs.
+ *
  * @author James Missen
  *
  * @see SpringBootApplication
+ * @see OpenAPIDefinition
  */
 @SpringBootApplication
+@OpenAPIDefinition(info = Info(APPLICATION_NAME))
 class MainApplication
 
 /**
