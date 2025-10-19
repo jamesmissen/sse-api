@@ -30,7 +30,7 @@ import kotlin.math.max
  * @property base64 The Base64 encoder and decoder.
  * @property dateTimeFormatter The formatter for date-times.
  * @property jsonMapper The JSON object mapper.
- * @property resources The resource loader.
+ * @property resourceLoader The resource loader.
  *
  * @author James Missen
  */
@@ -40,7 +40,7 @@ class CountriesController(
     private final val base64: Base64,
     private final val dateTimeFormatter: DateTimeFormatter,
     private final val jsonMapper: JsonMapper,
-    private final val resources: ResourceLoader
+    private final val resourceLoader: ResourceLoader
 ) {
 
     companion object {
@@ -81,7 +81,7 @@ class CountriesController(
      * @author James Missen
      */
     private final val countryData: List<Country> by lazy {
-        jsonMapper.readValue(resources.getResource("$DATA_RESOURCE_LOCATION/countries.json"))
+        jsonMapper.readValue(resourceLoader.getResource("$DATA_RESOURCE_LOCATION/countries.json"))
     }
 
     /**
