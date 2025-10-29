@@ -7,6 +7,14 @@ kotlin {
     jvmToolchain(17)
 }
 
+springBoot {
+    buildInfo {
+        properties {
+            if (project.version == "unspecified") excludes.add("version")
+        }
+    }
+}
+
 dependencies {
     implementation(libs.jackson2.module)
     implementation(libs.jackson3.module)
