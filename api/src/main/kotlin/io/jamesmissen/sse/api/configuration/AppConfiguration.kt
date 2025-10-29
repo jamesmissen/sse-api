@@ -1,4 +1,4 @@
-package com.jamesmissen.sse.api.configuration
+package io.jamesmissen.sse.api.configuration
 
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration

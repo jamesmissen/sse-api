@@ -1,6 +1,6 @@
-package com.jamesmissen.sse.api.configuration
+package io.jamesmissen.sse.api.configuration
 
-import com.jamesmissen.sse.api.util.extensions.operations
+import io.jamesmissen.sse.api.util.extensions.operations
 import io.swagger.v3.oas.models.OpenAPI
 import io.swagger.v3.oas.models.Operation
 import io.swagger.v3.oas.models.Paths

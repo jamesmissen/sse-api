@@ -1,4 +1,4 @@
-package com.jamesmissen.sse.api.util.extensions
+package io.jamesmissen.sse.api.util.extensions
 
 import org.springframework.core.io.Resource
 import java.io.FileNotFoundException

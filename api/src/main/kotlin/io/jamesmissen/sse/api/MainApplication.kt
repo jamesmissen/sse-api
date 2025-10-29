@@ -1,6 +1,6 @@
-package com.jamesmissen.sse.api
+package io.jamesmissen.sse.api
 
-import com.jamesmissen.sse.api.util.Constants.APPLICATION_NAME
+import io.jamesmissen.sse.api.util.Constants.APPLICATION_NAME
 import io.swagger.v3.oas.annotations.OpenAPIDefinition
 import io.swagger.v3.oas.annotations.info.Info
 import org.springframework.boot.autoconfigure.SpringBootApplication

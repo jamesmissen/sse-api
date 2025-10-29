@@ -1,7 +1,7 @@
-package com.jamesmissen.sse.api.configuration
+package io.jamesmissen.sse.api.configuration
 
-import com.jamesmissen.sse.api.util.extensions.responses
-import com.jamesmissen.sse.api.util.extensions.toSchema
+import io.jamesmissen.sse.api.util.extensions.responses
+import io.jamesmissen.sse.api.util.extensions.toSchema
 import io.swagger.v3.oas.models.Components
 import io.swagger.v3.oas.models.media.MediaType
 import io.swagger.v3.oas.models.media.Schema

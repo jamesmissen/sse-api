@@ -48,4 +48,4 @@ COPY --from=final-builder /app/api/build/dependency/META-INF /app/META-INF
 
 EXPOSE 8080
 
-ENTRYPOINT ["java", "-cp", "app/classes:app/lib/*", "com.jamesmissen.sse.api.MainApplicationKt"]
+ENTRYPOINT ["java", "-cp", "app/classes:app/lib/*", "io.jamesmissen.sse.api.MainApplicationKt"]
