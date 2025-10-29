@@ -1,6 +1,7 @@
 package io.jamesmissen.sse.api
 
-import io.jamesmissen.sse.api.util.constant.APPLICATION_NAME
+import io.jamesmissen.sse.api.util.value.message.API_DESCRIPTION_CODE
+import io.jamesmissen.sse.api.util.value.message.API_TITLE_CODE
 import io.swagger.v3.oas.annotations.OpenAPIDefinition
 import io.swagger.v3.oas.annotations.info.Info
 import org.springframework.boot.autoconfigure.SpringBootApplication
@@ -19,7 +20,7 @@ import org.springframework.boot.runApplication
  * @see OpenAPIDefinition
  */
 @SpringBootApplication(proxyBeanMethods = false)
-@OpenAPIDefinition(info = Info(APPLICATION_NAME))
+@OpenAPIDefinition(info = Info(title = API_TITLE_CODE, description = API_DESCRIPTION_CODE))
 class MainApplication
 
 /**
