@@ -18,7 +18,7 @@ import org.springframework.boot.runApplication
  * @see SpringBootApplication
  * @see OpenAPIDefinition
  */
-@SpringBootApplication
+@SpringBootApplication(proxyBeanMethods = false)
 @OpenAPIDefinition(info = Info(APPLICATION_NAME))
 class MainApplication
 
