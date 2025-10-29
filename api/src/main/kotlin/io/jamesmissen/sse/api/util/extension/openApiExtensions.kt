@@ -1,4 +1,4 @@
-package io.jamesmissen.sse.api.util.extensions
+package io.jamesmissen.sse.api.util.extension
 
 import io.swagger.v3.core.converter.ModelConverters
 import io.swagger.v3.oas.models.OpenAPI

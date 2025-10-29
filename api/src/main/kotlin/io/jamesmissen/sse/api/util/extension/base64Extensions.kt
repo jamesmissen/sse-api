@@ -1,4 +1,4 @@
-package io.jamesmissen.sse.api.util.extensions
+package io.jamesmissen.sse.api.util.extension
 
 import kotlin.io.encoding.Base64
 import kotlin.text.Charsets.UTF_8
