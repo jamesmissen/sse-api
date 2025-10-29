@@ -1,4 +1,4 @@
-package com.jamesmissen.sse.api.model
+package io.jamesmissen.sse.api.model
 
 /**
  * A model for a country.

@@ -1,4 +1,4 @@
-package com.jamesmissen.sse.api.util
+package io.jamesmissen.sse.api.util
 
 import org.springframework.core.io.ResourceLoader.CLASSPATH_URL_PREFIX
 

@@ -1,10 +1,10 @@
-package com.jamesmissen.sse.api.controller
+package io.jamesmissen.sse.api.controller
 
-import com.jamesmissen.sse.api.model.Country
-import com.jamesmissen.sse.api.util.Constants.DATA_RESOURCE_LOCATION
-import com.jamesmissen.sse.api.util.extensions.decodeId
-import com.jamesmissen.sse.api.util.extensions.encodeId
-import com.jamesmissen.sse.api.util.extensions.readValue
+import io.jamesmissen.sse.api.model.Country
+import io.jamesmissen.sse.api.util.Constants.DATA_RESOURCE_LOCATION
+import io.jamesmissen.sse.api.util.extensions.decodeId
+import io.jamesmissen.sse.api.util.extensions.encodeId
+import io.jamesmissen.sse.api.util.extensions.readValue
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
