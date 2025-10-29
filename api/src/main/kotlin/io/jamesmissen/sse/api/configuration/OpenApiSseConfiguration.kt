@@ -21,7 +21,7 @@ import org.springframework.http.codec.ServerSentEvent
  *
  * @author James Missen
  */
-@Configuration
+@Configuration(proxyBeanMethods = false)
 @ConditionalOnProperty(name = [SPRINGDOC_ENABLED], matchIfMissing = true)
 class OpenApiSseConfiguration {
 

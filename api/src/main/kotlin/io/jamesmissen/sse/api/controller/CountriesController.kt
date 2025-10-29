@@ -37,10 +37,10 @@ import kotlin.math.max
 @RestController
 @RequestMapping("/countries")
 class CountriesController(
-    private final val base64: Base64,
-    private final val dateTimeFormatter: DateTimeFormatter,
-    private final val jsonMapper: JsonMapper,
-    private final val resourceLoader: ResourceLoader
+    private val base64: Base64,
+    private val dateTimeFormatter: DateTimeFormatter,
+    private val jsonMapper: JsonMapper,
+    private val resourceLoader: ResourceLoader
 ) {
 
     companion object {
@@ -80,7 +80,7 @@ class CountriesController(
      *
      * @author James Missen
      */
-    private final val countryData: List<Country> by lazy {
+    private val countryData: List<Country> by lazy {
         jsonMapper.readValue(resourceLoader.getResource("$DATA_RESOURCE_LOCATION/countries.json"))
     }
 
@@ -94,7 +94,7 @@ class CountriesController(
      * @author James Missen
      */
     @GetMapping("", produces = [APPLICATION_JSON_VALUE])
-    final fun getCountries() = countryData
+    fun getCountries() = countryData
 
     /**
      * Streams country data as a continuous flow of Server-Sent Events.
@@ -110,7 +110,7 @@ class CountriesController(
      * @see ServerSentEvent
      */
     @GetMapping("/stream", produces = [TEXT_EVENT_STREAM_VALUE])
-    final fun getCountriesStream(@RequestHeader("Last-Event-ID") lastEventId: String?) = flow {
+    fun getCountriesStream(@RequestHeader("Last-Event-ID") lastEventId: String?) = flow {
         val currentId = currentTimeMillis() / DELAY + 1
         val initialId = lastEventId
             ?.let { id -> base64.decodeId(id, EVENT)?.plus(1) }

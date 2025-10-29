@@ -15,7 +15,7 @@ import kotlin.io.encoding.Base64.PaddingOption.ABSENT_OPTIONAL
  *
  * @author James Missen
  */
-@Configuration
+@Configuration(proxyBeanMethods = false)
 class AppConfiguration {
 
     /**

@@ -77,7 +77,7 @@ import kotlin.text.Charsets.UTF_8
  *
  * @author James Missen
  */
-@Configuration
+@Configuration(proxyBeanMethods = false)
 class SpringDocConfiguration {
 
     companion object {

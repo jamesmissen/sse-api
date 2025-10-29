@@ -11,7 +11,7 @@ import java.net.URI
  *
  * @author James Missen
  */
-@Configuration
+@Configuration(proxyBeanMethods = false)
 class WebRequestConfiguration {
 
     /**
