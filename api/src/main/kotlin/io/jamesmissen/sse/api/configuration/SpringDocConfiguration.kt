@@ -1,6 +1,6 @@
 package io.jamesmissen.sse.api.configuration
 
-import io.jamesmissen.sse.api.util.extensions.text
+import io.jamesmissen.sse.api.util.extension.text
 import kotlinx.coroutines.reactor.awaitSingle
 import kotlinx.coroutines.reactor.mono
 import org.springdoc.core.configuration.SpringDocConfiguration
