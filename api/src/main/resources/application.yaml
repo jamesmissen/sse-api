@@ -22,3 +22,6 @@ springdoc:
   swagger-ui:
     enabled: ${APP_SWAGGER_UI_ENABLED:true}
     path: ${APP_SWAGGER_UI_PATH:/docs}
+  open-api:
+    info:
+      version: ${build.version:}

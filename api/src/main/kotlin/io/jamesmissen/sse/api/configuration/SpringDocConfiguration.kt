@@ -1,6 +1,8 @@
 package io.jamesmissen.sse.api.configuration
 
 import io.jamesmissen.sse.api.util.extension.text
+import io.swagger.v3.oas.models.OpenAPI
+import io.swagger.v3.oas.models.info.Info
 import kotlinx.coroutines.reactor.awaitSingle
 import kotlinx.coroutines.reactor.mono
 import org.springdoc.core.configuration.SpringDocConfiguration
@@ -43,6 +45,7 @@ import org.springdoc.webflux.ui.SwaggerWelcomeCommon
 import org.springframework.beans.factory.ObjectFactory
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty
+import org.springframework.boot.context.properties.ConfigurationProperties
 import org.springframework.boot.webflux.autoconfigure.WebFluxProperties
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
@@ -620,6 +623,34 @@ class SpringDocConfiguration {
             locale: Locale
         ) = throw ResponseStatusException(NOT_FOUND)
     }
+
+    /**
+     * Enables type-safe property binding for the SpringDoc `open-api` property.
+     *
+     * This [Bean] instantiates an [OpenAPI] instance using the default constructor to allow property binding to work
+     * correctly when configuring SpringDoc.
+     *
+     * @return An [OpenAPI] instance.
+     *
+     * @author James Missen
+     */
+    @Bean(autowireCandidate = false)
+    @ConfigurationProperties("springdoc.open-api")
+    fun openApiPropertyBinding() = OpenAPI()
+
+    /**
+     * Enables type-safe property binding for the SpringDoc `open-api.info` property.
+     *
+     * This [Bean] instantiates an [Info] instance using the default constructor to allow property binding to work
+     * correctly when configuring SpringDoc.
+     *
+     * @return An [Info] instance.
+     *
+     * @author James Missen
+     */
+    @Bean(autowireCandidate = false)
+    @ConfigurationProperties("springdoc.open-api.info")
+    fun infoPropertyBinding() = Info()
 
     /**
      * Provides a minimal SpringDoc configuration.
