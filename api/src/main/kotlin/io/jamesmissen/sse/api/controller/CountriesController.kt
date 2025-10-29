@@ -1,7 +1,7 @@
 package io.jamesmissen.sse.api.controller
 
 import io.jamesmissen.sse.api.model.Country
-import io.jamesmissen.sse.api.util.Constants.DATA_RESOURCE_LOCATION
+import io.jamesmissen.sse.api.util.DATA_RESOURCE_LOCATION
 import io.jamesmissen.sse.api.util.extensions.decodeId
 import io.jamesmissen.sse.api.util.extensions.encodeId
 import io.jamesmissen.sse.api.util.extensions.readValue
