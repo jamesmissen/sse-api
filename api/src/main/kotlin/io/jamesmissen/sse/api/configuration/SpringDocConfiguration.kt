@@ -1,8 +1,11 @@
 package io.jamesmissen.sse.api.configuration
 
 import io.jamesmissen.sse.api.util.extension.text
+import io.swagger.v3.oas.models.ExternalDocumentation
 import io.swagger.v3.oas.models.OpenAPI
+import io.swagger.v3.oas.models.info.Contact
 import io.swagger.v3.oas.models.info.Info
+import io.swagger.v3.oas.models.info.License
 import kotlinx.coroutines.reactor.awaitSingle
 import kotlinx.coroutines.reactor.mono
 import org.springdoc.core.configuration.SpringDocConfiguration
@@ -651,6 +654,48 @@ class SpringDocConfiguration {
     @Bean(autowireCandidate = false)
     @ConfigurationProperties("springdoc.open-api.info")
     fun infoPropertyBinding() = Info()
+
+    /**
+     * Enables type-safe property binding for the SpringDoc `open-api.info.contact` property.
+     *
+     * This [Bean] instantiates a [Contact] instance using the default constructor to allow property binding to work
+     * correctly when configuring SpringDoc.
+     *
+     * @return A [Contact] instance.
+     *
+     * @author James Missen
+     */
+    @Bean(autowireCandidate = false)
+    @ConfigurationProperties("springdoc.open-api.info.contact")
+    fun contactPropertyBinding() = Contact()
+
+    /**
+     * Enables type-safe property binding for the SpringDoc `open-api.info.license` property.
+     *
+     * This [Bean] instantiates a [License] instance using the default constructor to allow property binding to work
+     * correctly when configuring SpringDoc.
+     *
+     * @return A [License] instance.
+     *
+     * @author James Missen
+     */
+    @Bean(autowireCandidate = false)
+    @ConfigurationProperties("springdoc.open-api.info.license")
+    fun licensePropertyBinding() = License()
+
+    /**
+     * Enables type-safe property binding for the SpringDoc `open-api.external-docs` property.
+     *
+     * This [Bean] instantiates an [ExternalDocumentation] instance using the default constructor to allow property
+     * binding to work correctly when configuring SpringDoc.
+     *
+     * @return An [ExternalDocumentation] instance.
+     *
+     * @author James Missen
+     */
+    @Bean(autowireCandidate = false)
+    @ConfigurationProperties("springdoc.open-api.external-docs")
+    fun externalDocsPropertyBinding() = ExternalDocumentation()
 
     /**
      * Provides a minimal SpringDoc configuration.
