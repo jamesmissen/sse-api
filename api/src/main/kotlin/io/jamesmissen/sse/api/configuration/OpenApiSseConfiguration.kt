@@ -1,6 +1,6 @@
 package io.jamesmissen.sse.api.configuration
 
-import io.jamesmissen.sse.api.util.extension.responses
+import io.jamesmissen.sse.api.util.extension.allResponses
 import io.jamesmissen.sse.api.util.extension.toSchema
 import io.swagger.v3.oas.models.Components
 import io.swagger.v3.oas.models.media.MediaType
@@ -56,7 +56,7 @@ class OpenApiSseConfiguration {
      */
     @Bean
     fun sseEventSchema() = OpenApiCustomizer { openApi ->
-        val names = openApi.responses.mapNotNull { it.content?.keys }.flatten()
+        val names = openApi.allResponses.mapNotNull { it.content?.keys }.flatten()
 
         // Return if no SSE endpoints present
         if (names.none { it.contains("\\b$TEXT_EVENT_STREAM_VALUE\\b".toRegex()) }) return@OpenApiCustomizer
@@ -78,7 +78,7 @@ class OpenApiSseConfiguration {
      */
     @Bean
     fun sseMediaTypes() = OpenApiCustomizer { openApi ->
-        openApi.responses.forEach { response ->
+        openApi.allResponses.forEach { response ->
             response.content?.replaceAll { name, mediaType ->
                 // Skip if not SSE endpoint
                 if (mediaType.schema?.items == null || !name.contains("\\b$TEXT_EVENT_STREAM_VALUE\\b".toRegex())) {
