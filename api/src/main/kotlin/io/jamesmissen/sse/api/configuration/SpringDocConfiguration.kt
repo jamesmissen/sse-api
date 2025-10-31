@@ -1,5 +1,11 @@
 package io.jamesmissen.sse.api.configuration
 
+import com.fasterxml.jackson.annotation.JsonInclude.Include.NON_EMPTY
+import com.fasterxml.jackson.databind.ObjectMapper
+import io.jamesmissen.sse.api.util.extension.contact
+import io.jamesmissen.sse.api.util.extension.isEmpty
+import io.jamesmissen.sse.api.util.extension.license
+import io.jamesmissen.sse.api.util.extension.objectMappers
 import io.jamesmissen.sse.api.util.extension.text
 import io.swagger.v3.oas.models.ExternalDocumentation
 import io.swagger.v3.oas.models.OpenAPI
@@ -8,7 +14,9 @@ import io.swagger.v3.oas.models.info.Info
 import io.swagger.v3.oas.models.info.License
 import kotlinx.coroutines.reactor.awaitSingle
 import kotlinx.coroutines.reactor.mono
+import org.springdoc.core.conditions.SpecPropertiesCondition
 import org.springdoc.core.configuration.SpringDocConfiguration
+import org.springdoc.core.customizers.SpecPropertiesCustomizer
 import org.springdoc.core.customizers.SpringDocCustomizers
 import org.springdoc.core.models.GroupedOpenApi
 import org.springdoc.core.properties.SpringDocConfigProperties
@@ -51,6 +59,7 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty
 import org.springframework.boot.context.properties.ConfigurationProperties
 import org.springframework.boot.webflux.autoconfigure.WebFluxProperties
 import org.springframework.context.annotation.Bean
+import org.springframework.context.annotation.Conditional
 import org.springframework.context.annotation.Configuration
 import org.springframework.context.annotation.Primary
 import org.springframework.core.io.Resource
@@ -113,6 +122,56 @@ class SpringDocConfiguration {
     }
 
     /**
+     * Configures the SpringDoc object mappers dynamically.
+     *
+     * This [Bean] adjusts the default configuration of the Jackson [ObjectMapper] instances used for serialisation.
+     *
+     * It sets threshold for the inclusion of properties, to ensure that serialised objects do not contain properties
+     * with empty values.
+     *
+     * @param objectMapperProvider The SpringDoc object mapper provider.
+     *
+     * @return An updated [ObjectMapperProvider] instance.
+     *
+     * @author James Missen
+     *
+     * @see ObjectMapperProvider
+     * @see ObjectMapper
+     */
+    @Bean
+    @ConditionalOnProperty(name = [SPRINGDOC_ENABLED], matchIfMissing = true)
+    fun defaultObjectMapperProvider(objectMapperProvider: ObjectMapperProvider) = objectMapperProvider.apply {
+        for (objectMapper in objectMappers) {
+            objectMapper.setDefaultPropertyInclusion(NON_EMPTY)
+        }
+    }
+
+    /**
+     * Configures the OpenAPI config properties dynamically.
+     *
+     * This [Bean] adjusts the default configuration settings for the OpenAPI definition.
+     *
+     * It removes any components that have not been set using `springdoc.open-api.*` configuration properties.
+     *
+     * @param springDocConfigProperties The SpringDoc config properties.
+     *
+     * @return A [SpecPropertiesCustomizer] instance.
+     *
+     * @author James Missen
+     *
+     * @see SpringDocConfigProperties.openApi
+     */
+    @Bean
+    @ConditionalOnProperty(name = [SPRINGDOC_ENABLED], matchIfMissing = true)
+    @Conditional(SpecPropertiesCondition::class)
+    fun defaultOpenApiConfigProperties(springDocConfigProperties: SpringDocConfigProperties) =
+        SpecPropertiesCustomizer(springDocConfigProperties.openApi?.apply {
+            if (contact?.isEmpty() == true) contact = null
+            if (license?.isEmpty() == true) license = null
+            if (externalDocs?.isEmpty() == true) externalDocs = null
+        })
+
+    /**
      * Configures the Swagger UI config properties dynamically.
      *
      * This [Bean] adjusts the default configuration settings for the Swagger UI.
@@ -129,7 +188,7 @@ class SpringDocConfiguration {
     @Bean
     @Primary
     @ConditionalOnProperty(name = [SPRINGDOC_SWAGGER_UI_ENABLED], matchIfMissing = true)
-    fun swaggerUiDefaultConfigProperties(
+    fun defaultSwaggerUiConfigProperties(
         config: SwaggerUiConfigProperties,
         @Value(SWAGGER_UI_PATH) swaggerUiPath: String
     ) = config.also { config ->

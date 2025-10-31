@@ -9,6 +9,9 @@ import io.swagger.v3.oas.models.Operation
 import io.swagger.v3.oas.models.PathItem
 import io.swagger.v3.oas.models.examples.Example
 import io.swagger.v3.oas.models.headers.Header
+import io.swagger.v3.oas.models.info.Contact
+import io.swagger.v3.oas.models.info.Info
+import io.swagger.v3.oas.models.info.License
 import io.swagger.v3.oas.models.links.Link
 import io.swagger.v3.oas.models.media.Discriminator
 import io.swagger.v3.oas.models.media.MediaType
@@ -26,6 +29,40 @@ import io.swagger.v3.oas.models.servers.ServerVariable
 import io.swagger.v3.oas.models.tags.Tag
 import kotlin.reflect.KClass
 import kotlin.reflect.full.functions
+
+/**
+ * The contact information for this API definition, or `null` if no contact information is defined.
+ *
+ * @receiver The [OpenAPI] instance with which the [Contact] element is associated.
+ *
+ * @author James Missen
+ *
+ * @see Contact
+ * @see Info.contact
+ */
+var OpenAPI.contact
+    get() = info?.contact
+    set(contact) {
+        if (info == null && contact != null) info = Info()
+        info.contact = contact
+    }
+
+/**
+ * The license information for this API definition, or `null` if no license information is defined.
+ *
+ * @receiver The [OpenAPI] instance with which the [License] element is associated.
+ *
+ * @author James Missen
+ *
+ * @see License
+ * @see Info.license
+ */
+var OpenAPI.license
+    get() = info?.license
+    set(license) {
+        if (info == null && license != null) info = Info()
+        info.license = license
+    }
 
 /**
  * Returns all discriminator elements defined in this API definition.
@@ -396,6 +433,42 @@ val OpenAPI.allTags
  */
 val OpenAPI.allXmls
     get() = allSchemas.mapNotNull { schema -> schema.xml }
+
+/**
+ * Returns `true` if this contact does not have any defined properties.
+ *
+ * @receiver The [Contact] instance to check for emptiness.
+ *
+ * @return A [Boolean] value indicating whether this [Contact] is empty.
+ *
+ * @author James Missen
+ */
+fun Contact.isEmpty() =
+    name.isNullOrEmpty() && email.isNullOrEmpty() && url.isNullOrEmpty() && extensions.isNullOrEmpty()
+
+/**
+ * Returns `true` if this contact does not have any defined properties.
+ *
+ * @receiver The [License] instance to check for emptiness.
+ *
+ * @return A [Boolean] value indicating whether this [License] is empty.
+ *
+ * @author James Missen
+ */
+fun License.isEmpty() =
+    name.isNullOrEmpty() && identifier.isNullOrEmpty() && url.isNullOrEmpty() && extensions.isNullOrEmpty()
+
+/**
+ * Returns `true` if this contact does not have any defined properties.
+ *
+ * @receiver The [ExternalDocumentation] instance to check for emptiness.
+ *
+ * @return A [Boolean] value indicating whether this [ExternalDocumentation] is empty.
+ *
+ * @author James Missen
+ */
+fun ExternalDocumentation.isEmpty() =
+    description.isNullOrEmpty() && url.isNullOrEmpty() && extensions.isNullOrEmpty()
 
 /**
  * Converts this class to an OpenAPI schema.
