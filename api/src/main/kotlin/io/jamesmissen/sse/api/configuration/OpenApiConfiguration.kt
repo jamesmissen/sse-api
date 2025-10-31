@@ -1,6 +1,6 @@
 package io.jamesmissen.sse.api.configuration
 
-import io.jamesmissen.sse.api.util.extension.operations
+import io.jamesmissen.sse.api.util.extension.allOperations
 import io.swagger.v3.oas.models.OpenAPI
 import io.swagger.v3.oas.models.Operation
 import io.swagger.v3.oas.models.Paths
@@ -108,7 +108,7 @@ class OpenApiConfiguration {
      */
     @Bean
     fun apiOperationSummaries() = OpenApiCustomizer { openApi ->
-        openApi.operations.forEach { operation ->
+        openApi.allOperations.forEach { operation ->
             if (!operation.summary.isNullOrBlank() || operation.operationId.isEmpty()) return@forEach
 
             operation.summary = splitCamelCase(operation.operationId)
@@ -131,7 +131,7 @@ class OpenApiConfiguration {
      */
     @Bean
     fun apiOperationTags() = OpenApiCustomizer { openApi ->
-        openApi.operations.forEach { operation ->
+        openApi.allOperations.forEach { operation ->
             if (operation.tags.isNullOrEmpty()) return@forEach
 
             operation.tags = operation.tags.map { it.removeSuffix("-controller") }
