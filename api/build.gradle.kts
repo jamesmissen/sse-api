@@ -7,6 +7,31 @@ kotlin {
     jvmToolchain(17)
 }
 
+springBoot {
+    buildInfo {
+        properties {
+            if (project.version == "unspecified") excludes.add("version")
+
+            listOf(
+                "api.version",
+                "api.contact.name",
+                "api.contact.email",
+                "api.contact.url",
+                "api.license.name",
+                "api.license.identifier",
+                "api.license.url",
+                "api.terms-of-service.url",
+                "api.external-docs.description",
+                "api.external-docs.url"
+            ).associateWith { propertyName ->
+                providers.gradleProperty(propertyName).orElse(providers.gradleProperty(propertyName.toCamelCase()))
+            }.forEach { (propertyName, provider) ->
+                if (provider.isPresent) additional.put(propertyName, provider)
+            }
+        }
+    }
+}
+
 dependencies {
     implementation(libs.jackson2.module)
     implementation(libs.jackson3.module)
@@ -27,3 +52,9 @@ dependencies {
 
     developmentOnly(libs.spring.boot.devtools)
 }
+
+private fun String.toCamelCase() = this
+    .lowercase()
+    .split('.', '_', '-')
+    .joinToString("") { part -> part.replaceFirstChar(Char::titlecase) }
+    .replaceFirstChar(Char::lowercase)

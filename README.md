@@ -63,7 +63,9 @@ The application will be available at `localhost` on port `8080`.
 
 ## ⚙️ Configuration
 
-You can configure the application using environment variables.
+#### Runtime Configuration
+
+You can configure how the application runs using environment variables.
 
 | Variable                 | Description                        | Default         |
 |--------------------------|------------------------------------|-----------------|
@@ -90,6 +92,51 @@ docker run \
   -e APP_API_DOCS_PATH=/docs/api.json \
   -e APP_SWAGGER_UI_ENABLED=false \
   sse-api
+```
+
+#### Build Configuration
+
+You can configure how the application builds using Gradle properties.
+
+| Property                        | Description                                                                                 |
+|---------------------------------|---------------------------------------------------------------------------------------------|
+| `api.version`                   | The version of the API docs*.                                                               |
+| `api.contact.name`              | The name of the contact person or organisation for the API.                                 |
+| `api.contact.email`             | The email address of the contact person or organisation for the API.                        |
+| `api.contact.url`               | The URL for the contact information of the API.                                             |
+| `api.license.name`              | The name of the license used for the API.                                                   |
+| `api.license.identifier`        | The [SPDX expression](https://spdx.org/licenses) representing the license used for the API. |
+| `api.license.url`               | The URL for the license information of the API.                                             |
+| `api.terms-of-service.url`      | The URL for the terms of service of the API.                                                |
+| `api.external-docs.description` | The description of the target documentation of the API.                                     |
+| `api.external-docs.url`         | The URL for the target documentation of the API.                                            |
+
+_*This is the version of the OpenAPI document. It is not (or does not need to be) the same as `version` property for the
+Gradle project, nor the version of the API itself, nor the version of the OpenAPI specification._
+
+You can set Gradle properties by adding to [`gradle.properties`](gradle.properties). For example:
+
+```
+# other properties...
+
+api.license.name=MIT License
+api.license.identifier=MIT
+```
+
+You can also set Gradle properties using flags with the `gradlew` command. For example:
+
+```
+./gradlew bootRun -Papi.version=0.1.0
+```
+
+You can also set Gradle properties using environment variables prefixed with `ORG_GRADLE_PROJECT_`. In this case,
+property names must be specified using camel case. For example:
+
+```
+export ORG_GRADLE_PROJECT_apiVersion=0.1.0
+export ORG_GRADLE_PROJECT_apiTermsOfServiceUrl=https://example.com/terms
+
+./gradlew bootRun
 ```
 
 ## 🧩 Dependencies

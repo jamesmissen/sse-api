@@ -22,3 +22,18 @@ springdoc:
   swagger-ui:
     enabled: ${APP_SWAGGER_UI_ENABLED:true}
     path: ${APP_SWAGGER_UI_PATH:/docs}
+  open-api:
+    info:
+      version: ${build.api.version:${build.version:}}
+      contact:
+        name: ${build.api.contact.name:}
+        email: ${build.api.contact.email:}
+        url: ${build.api.contact.url:}
+      license:
+        name: ${build.api.license.name:}
+        identifier: ${build.api.license.identifier:}
+        url: ${build.api.license.url:}
+      terms-of-service: ${build.api.terms-of-service.url:}
+    external-docs:
+      description: ${build.api.external-docs.description:}
+      url: ${build.api.external-docs.url:}

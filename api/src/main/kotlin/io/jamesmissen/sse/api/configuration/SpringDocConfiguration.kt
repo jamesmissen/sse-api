@@ -1,9 +1,32 @@
 package io.jamesmissen.sse.api.configuration
 
+import com.fasterxml.jackson.annotation.JsonInclude.Include.NON_EMPTY
+import com.fasterxml.jackson.databind.ObjectMapper
+import io.jamesmissen.sse.api.util.extension.allExamples
+import io.jamesmissen.sse.api.util.extension.allExternalDocs
+import io.jamesmissen.sse.api.util.extension.allHeaders
+import io.jamesmissen.sse.api.util.extension.allOperations
+import io.jamesmissen.sse.api.util.extension.allPathItems
+import io.jamesmissen.sse.api.util.extension.allSchemas
+import io.jamesmissen.sse.api.util.extension.allSecuritySchemes
+import io.jamesmissen.sse.api.util.extension.allServerVariables
+import io.jamesmissen.sse.api.util.extension.allTags
+import io.jamesmissen.sse.api.util.extension.contact
+import io.jamesmissen.sse.api.util.extension.isEmpty
+import io.jamesmissen.sse.api.util.extension.license
+import io.jamesmissen.sse.api.util.extension.objectMappers
 import io.jamesmissen.sse.api.util.extension.text
+import io.swagger.v3.oas.models.ExternalDocumentation
+import io.swagger.v3.oas.models.OpenAPI
+import io.swagger.v3.oas.models.info.Contact
+import io.swagger.v3.oas.models.info.Info
+import io.swagger.v3.oas.models.info.License
 import kotlinx.coroutines.reactor.awaitSingle
 import kotlinx.coroutines.reactor.mono
+import org.springdoc.core.conditions.SpecPropertiesCondition
 import org.springdoc.core.configuration.SpringDocConfiguration
+import org.springdoc.core.customizers.OpenApiLocaleCustomizer
+import org.springdoc.core.customizers.SpecPropertiesCustomizer
 import org.springdoc.core.customizers.SpringDocCustomizers
 import org.springdoc.core.models.GroupedOpenApi
 import org.springdoc.core.properties.SpringDocConfigProperties
@@ -31,6 +54,7 @@ import org.springdoc.core.utils.Constants.SWAGGER_INITIALIZER_JS
 import org.springdoc.core.utils.Constants.SWAGGER_UI_OAUTH_REDIRECT_URL
 import org.springdoc.core.utils.Constants.SWAGGER_UI_PATH
 import org.springdoc.core.utils.Constants.SWAGGER_UI_PREFIX
+import org.springdoc.core.utils.PropertyResolverUtils
 import org.springdoc.webflux.api.MultipleOpenApiWebFluxResource
 import org.springdoc.webflux.api.OpenApiWebfluxResource
 import org.springdoc.webflux.ui.SwaggerConfigResource
@@ -43,8 +67,10 @@ import org.springdoc.webflux.ui.SwaggerWelcomeCommon
 import org.springframework.beans.factory.ObjectFactory
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty
+import org.springframework.boot.context.properties.ConfigurationProperties
 import org.springframework.boot.webflux.autoconfigure.WebFluxProperties
 import org.springframework.context.annotation.Bean
+import org.springframework.context.annotation.Conditional
 import org.springframework.context.annotation.Configuration
 import org.springframework.context.annotation.Primary
 import org.springframework.core.io.Resource
@@ -104,7 +130,148 @@ class SpringDocConfiguration {
          * @author James Missen
          */
         private const val WEBJAR_RESOURCE_LOCATION = "$CLASSPATH_RESOURCE_LOCATION$DEFAULT_WEB_JARS_PREFIX_URL/"
+
+        /**
+         * Resolves the string property value provided by the getter, and consumes the result using the setter.
+         *
+         * @param getter The property getter.
+         * @param setter The property setter.
+         * @param resolver The property resolver.
+         * @param locale The locale in which to preform the resolution.
+         *
+         * @author James Missen
+         *
+         * @see PropertyResolverUtils.resolve
+         */
+        private inline fun resolveProperty(
+            getter: () -> String?,
+            setter: (String?) -> Unit,
+            resolver: PropertyResolverUtils,
+            locale: Locale
+        ) {
+            setter(resolver.resolve(getter(), locale))
+        }
+
+        /**
+         * Resolves the string property value for each element in the iterable, and consumes each result using the
+         * setter.
+         *
+         * @param elements The iterable of elements.
+         * @param getter The property getter.
+         * @param setter The property setter.
+         * @param resolver The property resolver.
+         * @param locale The locale in which to preform the resolution.
+         *
+         * @author James Missen
+         *
+         * @see PropertyResolverUtils.resolve
+         */
+        private inline fun <T> resolveProperties(
+            elements: Iterable<T>,
+            getter: T.() -> String?,
+            setter: T.(String?) -> Unit,
+            resolver: PropertyResolverUtils,
+            locale: Locale
+        ) {
+            for (element in elements) {
+                resolveProperty({ getter(element) }, { value -> setter(element, value) }, resolver, locale)
+            }
+        }
     }
+
+    /**
+     * Resolves property values in the OpenAPI docs.
+     *
+     * This [Bean] resolves specific string property values within a locale.
+     *
+     * It supplements the resolutions already performed by SpringDoc, by ensuring all appropriate properties can be
+     * resolved.
+     *
+     * @param openApiService The SpringDoc OpenAPI service.
+     * @param resolver The SpringDoc property resolver.
+     *
+     * @return An [OpenApiLocaleCustomizer] instance.
+     *
+     * @author James Missen
+     *
+     * @see PropertyResolverUtils.resolve
+     */
+    @Bean
+    @ConditionalOnProperty(name = [SPRINGDOC_ENABLED], matchIfMissing = true)
+    fun apiProperties(openApiService: OpenAPIService, resolver: PropertyResolverUtils) =
+        OpenApiLocaleCustomizer { openApi, locale ->
+            with(openApi) {
+                resolveProperties(allExamples, { description }, { description = it }, resolver, locale)
+                resolveProperties(allExamples, { summary }, { summary = it }, resolver, locale)
+                resolveProperties(allExternalDocs, { description }, { description = it }, resolver, locale)
+                resolveProperties(allPathItems, { summary }, { summary = it }, resolver, locale)
+                resolveProperties(allPathItems, { description }, { description = it }, resolver, locale)
+                resolveProperties(allHeaders, { description }, { description = it }, resolver, locale)
+                resolveProperties(allSecuritySchemes, { description }, { description = it }, resolver, locale)
+                resolveProperties(allServerVariables, { description }, { description = it }, resolver, locale)
+                resolveProperties(allTags, { description }, { description = it }, resolver, locale)
+                resolveProperties(allTags, { name }, { name = it }, resolver, locale)
+                license?.run { resolveProperty(::getName, ::setName, resolver, locale) }
+
+                for (operation in allOperations) {
+                    operation.tags?.replaceAll { tag -> resolver.resolve(tag, locale) }
+                }
+
+                for (schema in allSchemas) {
+                    openApiService.resolveProperties(schema, locale)
+                }
+            }
+        }
+
+    /**
+     * Configures the SpringDoc object mappers dynamically.
+     *
+     * This [Bean] adjusts the default configuration of the Jackson [ObjectMapper] instances used for serialisation.
+     *
+     * It sets threshold for the inclusion of properties, to ensure that serialised objects do not contain properties
+     * with empty values.
+     *
+     * @param objectMapperProvider The SpringDoc object mapper provider.
+     *
+     * @return An updated [ObjectMapperProvider] instance.
+     *
+     * @author James Missen
+     *
+     * @see ObjectMapperProvider
+     * @see ObjectMapper
+     */
+    @Bean
+    @ConditionalOnProperty(name = [SPRINGDOC_ENABLED], matchIfMissing = true)
+    fun defaultObjectMapperProvider(objectMapperProvider: ObjectMapperProvider) = objectMapperProvider.apply {
+        for (objectMapper in objectMappers) {
+            objectMapper.setDefaultPropertyInclusion(NON_EMPTY)
+        }
+    }
+
+    /**
+     * Configures the OpenAPI config properties dynamically.
+     *
+     * This [Bean] adjusts the default configuration settings for the OpenAPI definition.
+     *
+     * It removes any components that have not been set using `springdoc.open-api.*` configuration properties.
+     *
+     * @param springDocConfigProperties The SpringDoc config properties.
+     *
+     * @return A [SpecPropertiesCustomizer] instance.
+     *
+     * @author James Missen
+     *
+     * @see SpringDocConfigProperties.openApi
+     */
+    @Bean
+    @ConditionalOnProperty(name = [SPRINGDOC_ENABLED], matchIfMissing = true)
+    @Conditional(SpecPropertiesCondition::class)
+    fun defaultOpenApiConfigProperties(springDocConfigProperties: SpringDocConfigProperties) =
+        SpecPropertiesCustomizer(springDocConfigProperties.openApi?.apply {
+            if (contact?.isEmpty() == true) contact = null
+            if (license?.isEmpty() == true) license = null
+            if (externalDocs?.isEmpty() == true) externalDocs = null
+        })
 
     /**
      * Configures the Swagger UI config properties dynamically.
@@ -123,7 +290,7 @@ class SpringDocConfiguration {
     @Bean
     @Primary
     @ConditionalOnProperty(name = [SPRINGDOC_SWAGGER_UI_ENABLED], matchIfMissing = true)
-    fun swaggerUiDefaultConfigProperties(
+    fun defaultSwaggerUiConfigProperties(
         config: SwaggerUiConfigProperties,
         @Value(SWAGGER_UI_PATH) swaggerUiPath: String
     ) = config.also { config ->
@@ -620,6 +787,76 @@ class SpringDocConfiguration {
             locale: Locale
         ) = throw ResponseStatusException(NOT_FOUND)
     }
+
+    /**
+     * Enables type-safe property binding for the SpringDoc `open-api` property.
+     *
+     * This [Bean] instantiates an [OpenAPI] instance using the default constructor to allow property binding to work
+     * correctly when configuring SpringDoc.
+     *
+     * @return An [OpenAPI] instance.
+     *
+     * @author James Missen
+     */
+    @Bean(autowireCandidate = false)
+    @ConfigurationProperties("springdoc.open-api")
+    fun openApiPropertyBinding() = OpenAPI()
+
+    /**
+     * Enables type-safe property binding for the SpringDoc `open-api.info` property.
+     *
+     * This [Bean] instantiates an [Info] instance using the default constructor to allow property binding to work
+     * correctly when configuring SpringDoc.
+     *
+     * @return An [Info] instance.
+     *
+     * @author James Missen
+     */
+    @Bean(autowireCandidate = false)
+    @ConfigurationProperties("springdoc.open-api.info")
+    fun infoPropertyBinding() = Info()
+
+    /**
+     * Enables type-safe property binding for the SpringDoc `open-api.info.contact` property.
+     *
+     * This [Bean] instantiates a [Contact] instance using the default constructor to allow property binding to work
+     * correctly when configuring SpringDoc.
+     *
+     * @return A [Contact] instance.
+     *
+     * @author James Missen
+     */
+    @Bean(autowireCandidate = false)
+    @ConfigurationProperties("springdoc.open-api.info.contact")
+    fun contactPropertyBinding() = Contact()
+
+    /**
+     * Enables type-safe property binding for the SpringDoc `open-api.info.license` property.
+     *
+     * This [Bean] instantiates a [License] instance using the default constructor to allow property binding to work
+     * correctly when configuring SpringDoc.
+     *
+     * @return A [License] instance.
+     *
+     * @author James Missen
+     */
+    @Bean(autowireCandidate = false)
+    @ConfigurationProperties("springdoc.open-api.info.license")
+    fun licensePropertyBinding() = License()
+
+    /**
+     * Enables type-safe property binding for the SpringDoc `open-api.external-docs` property.
+     *
+     * This [Bean] instantiates an [ExternalDocumentation] instance using the default constructor to allow property
+     * binding to work correctly when configuring SpringDoc.
+     *
+     * @return An [ExternalDocumentation] instance.
+     *
+     * @author James Missen
+     */
+    @Bean(autowireCandidate = false)
+    @ConfigurationProperties("springdoc.open-api.external-docs")
+    fun externalDocsPropertyBinding() = ExternalDocumentation()
 
     /**
      * Provides a minimal SpringDoc configuration.
