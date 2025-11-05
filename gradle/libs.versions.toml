@@ -8,7 +8,7 @@ qosSlf4j = "2.0.17"
 reactorKotlin = "1.2.4"
 snakeYaml = "2.5"
 springBoot = "4.0.0-RC1"
-springDoc = "3.0.0-M1"
+springDoc = "3.0.0-RC1"
 
 [libraries]
 jackson2-module = { group = "com.fasterxml.jackson.module", name = "jackson-module-kotlin", version.ref = "jackson2" }
