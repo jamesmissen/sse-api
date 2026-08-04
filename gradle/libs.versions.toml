@@ -2,7 +2,7 @@
 jackson2 = "2.21.2"
 jackson3 = "3.1.1"
 kotlin = "2.4.10"
-kotlinXCoroutines = "1.10.2"
+kotlinXCoroutines = "1.11.0"
 qosLogback = "1.6.1"
 qosSlf4j = "2.0.18"
 reactorKotlin = "1.3.1"
